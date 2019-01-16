@@ -1,23 +1,22 @@
 @extends('layouts.app')
-
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">Dashboard</div>
-
-                <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-
-                    You are logged in!
-                </div>
-            </div>
-        </div>
+@if(isset($saved) && $saved == true)
+    <div class="alert alert-success alert-dismissible col-sm-6">
+        <a href="#" class="close" data-dismiss="alert">&times;</a>
+        <strong>Your Thread was Posted Successfully</strong>
     </div>
-</div>
+@endif
+
+@if(isset($sections))
+    <ul>
+    @foreach ($sections as $section => $arr)
+        <li>{{$section}}</li>
+        <ol>
+        @foreach ($arr as $x)
+            <a href="#"><li>{{$x}}</li></a>
+        @endforeach    
+        </ol>
+    @endforeach
+    </ul>
+@endif
 @endsection

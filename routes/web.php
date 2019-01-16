@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -11,10 +13,11 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
+Route::get('/', 'HomeController@renderHome');
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/create_thread',function(){
+    return view('create_thread');
+})->name('create_thread');
+
+Route::post('/create_thread', 'ThreadController@create_thread');
