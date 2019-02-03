@@ -14,10 +14,19 @@ use Illuminate\Support\Facades\Auth;
 */
 
 Route::get('/', 'HomeController@renderHome');
+
+Route::get('/home','HomeController@renderHome');
+
 Auth::routes();
 
-Route::get('/create_thread',function(){
-    return view('create_thread');
-})->name('create_thread');
+Route::get('/createThread',function(){
+    return view('createThread');
+})->name('createThread');
 
-Route::post('/create_thread', 'ThreadController@create_thread');
+Route::post('/createThread', 'ThreadController@createThread');
+
+Route::get('/showThread/{threadId}', 'ThreadController@showThread');
+
+Route::post('/postReply', 'ReplyController@postReply');
+
+Route::get('/getChildReplies/{parent}','ReplyController@getChildReplies');

@@ -21,10 +21,10 @@ class Thread extends Model
         $sections = Thread::select('section')->distinct()->orderby('section','asc')->get()->pluck('section');
         $pp = array();
         foreach($sections as $sec){
-            $pp[$sec] = Thread::select('title')->where('section','=',$sec)->limit(5)->get()->pluck('title')->flatten();
-            Log::debug($pp[$sec]);
+            $pp[$sec] = Thread::select('title','id')->where('section','=',$sec)->limit(5)->get();
+            // Log::debug($pp[$sec]);
         }
-        //dd($pp);
+        // dd($pp);
         return $pp;
     }
 }

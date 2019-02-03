@@ -19,9 +19,10 @@ class HomeController extends Controller
         $this->middleware('auth');
     }
     public function renderHome(){
+        Log::debug('home contrllr renderhome()'.dirname(__DIR__));
         $sections = Thread::getSections();
         return view('home', ['sections' => $sections]);
-        dd($sections);
+        // dd($sections);
     }
 
 
