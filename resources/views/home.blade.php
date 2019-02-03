@@ -1,9 +1,9 @@
 @extends('layouts.app')
 @section('content')
-@if($saved ?? false)
-    <div class="alert alert-success alert-dismissible col-sm-6">
+@if(isset($saved) && $saved == false)
+    <div class="alert alert-danger alert-dismissible col-sm-6">
         <a href="#" class="close" data-dismiss="alert">&times;</a>
-        <strong>Your Thread was Posted Successfully</strong>
+        <strong>Error in posting thread!</strong>
     </div>
 @endif
 

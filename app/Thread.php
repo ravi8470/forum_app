@@ -15,13 +15,16 @@ class Thread extends Model
         $temp->title = $request->input('title');
         $temp->body = $request->input('body');
         $temp->section = $request->input('section');
-        return $temp->save();
+        if($temp->save()){
+            return Thread::select('id')->where([['title','=',$request->input('title')],['body','=',$request->input('body')]])->get();
+        }
+        return false;
     }
     public static function getSections(){
         $sections = Thread::select('section')->distinct()->orderby('section','asc')->get()->pluck('section');
         $pp = array();
         foreach($sections as $sec){
-            $pp[$sec] = Thread::select('title','id')->where('section','=',$sec)->limit(5)->get();
+            $pp[$sec] = Thread::select('title','id')->where('section','=',$sec)->limit(50)->get();
             // Log::debug($pp[$sec]);
         }
         // dd($pp);

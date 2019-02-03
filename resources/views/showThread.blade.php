@@ -1,24 +1,24 @@
 @extends('layouts.app')
 
 @section('content')
-@if($savedReply ?? false)
-    <div class="alert alert-success alert-dismissible col-sm-6">
-        <a href="#" class="close" data-dismiss="alert">&times;</a>
-        <strong>Your reply was Posted Successfully</strong>
-    </div>
-@elseif(isset($savedReply))
-    <div class="alert alert-danger alert-dismissible col-sm-6">
-        <a href="#" class="close" data-dismiss="alert">&times;</a>
-        <strong>Error in posting reply.</strong>
-    </div>
-@endif
+    @if($savedReply ?? false)
+        <div class="alert alert-success alert-dismissible col-sm-6">
+            <a href="#" class="close" data-dismiss="alert">&times;</a>
+            <strong>Your reply was Posted Successfully</strong>
+        </div>
+    @elseif(isset($savedReply))
+        <div class="alert alert-danger alert-dismissible col-sm-6">
+            <a href="#" class="close" data-dismiss="alert">&times;</a>
+            <strong>Error in posting reply.</strong>
+        </div>
+    @endif
     @if(isset($data)&& isset($userName))
         @foreach($data as $x)
             <div class="card col-md-6" >
                 <div class="card-header">{{$x->title}}</div>
                 <div class="card-body">{{$x->body}}</div>                
             </div>
-           <span class="align-content-end"> Posted by {{$userName[0]}}</span>
+           <span class="align-content-end"> Posted by {{$userName}}</span>
         @endforeach
     @endif
     <hr>
