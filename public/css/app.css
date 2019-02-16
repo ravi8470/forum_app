@@ -165,18 +165,18 @@ a {
     -webkit-text-decoration-skip: objects;
 }
 a:hover {
-    color: #1d68a7;
+    color: #c7860d;
     text-decoration: underline;
 }
-a:not([href]):not([tabindex]),
+/* a:not([href]):not([tabindex]),
 a:not([href]):not([tabindex]):focus,
 a:not([href]):not([tabindex]):hover {
-    color: inherit;
+    color: blue;
     text-decoration: none;
-}
-a:not([href]):not([tabindex]):focus {
+} */
+/* a:not([href]):not([tabindex]):focus {
     outline: 0;
-}
+} */
 code,
 kbd,
 pre,
@@ -2002,6 +2002,7 @@ fieldset:disabled a.btn {
     color: #fff;
     background-color: #3490dc;
     border-color: #3490dc;
+    display: inline-block;
 }
 .btn-primary:hover {
     color: #fff;
@@ -3756,7 +3757,7 @@ input[type="submit"].btn-block {
     flex-direction: column;
     min-width: 0;
     word-wrap: break-word;
-    background-color: #fff;
+    background-color: #eeeef5;
     background-clip: border-box;
     border: 1px solid rgba(0, 0, 0, 0.125);
     border-radius: 0.25rem;

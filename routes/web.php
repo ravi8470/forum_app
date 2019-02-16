@@ -30,3 +30,5 @@ Route::get('/showThread/{threadId}', 'ThreadController@showThread');
 Route::post('/postReply', 'ReplyController@postReply');
 
 Route::get('/getChildReplies/{parent}','ReplyController@getChildReplies');
+
+Route::get('/getTreeAsJson/{threadId}','ThreadController@getTreeAsJson');

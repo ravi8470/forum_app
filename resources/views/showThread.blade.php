@@ -22,20 +22,23 @@
         @endforeach
     @endif
     <hr>
+
     <br>
-    @if(isset($topComments))
+    {{-- @if(isset($topComments))
         @foreach($topComments as $pp)
             @if($pp->parent == 0)
             <h4>{{$pp->reply}}--id:{{$pp->id}}-----parent:{{$pp->parent}}</h4>posted by {{$pp->name}}----------
-             <a href="#" onclick= @auth "displayreplybar({{$pp->id}})" @endauth>Reply</a>
+             <button onclick=  displayreplybar({{$pp->id}})>Reply</button>
                 @if($pp->has_child)
                     <button onclick="loadComments({{$pp->id}})" id="loadCommentsBtn{{$pp->id}}">Load Comments </button>
                 @endif
             @endif
                 <div id="reply{{$pp->id}}"></div>
-                <div id="childReplies{{$pp->id}}"></div><hr>
+                <div id="childReplies{{$pp->id}}" class="comments"></div><hr>
         @endforeach
-    @endif
+    @endif --}}
+    <h3>Comments:</h3>
+    <div id="cc"></div>
     @auth
             Post a Reply:
             <form action="/postReply" method="POST">
@@ -47,56 +50,59 @@
     @else
             Please <a href="{{route('login')}}">Login </a> to post a reply.
     @endauth
+            
 <script>
 function displayreplybar(parent){
-    @auth
-    if(document.getElementById('reply'+parent).innerHTML==""){
-    document.getElementById('reply'+parent).innerHTML='<form action="/postReply" method="POST">\
+    console.log('displayreplybar for id:', parent);
+    if(document.getElementById('replyBox'+parent).innerHTML==""){
+    console.log('hgjhgjhg'+parent);
+    document.getElementById('replyBox'+parent).innerHTML='<form action="/postReply" method="POST">\
                 @csrf\
                 <input type="hidden" name="parent" value="'+parent+'">\
-                <pre>           <textarea name="reply" class="col-sm-6" required autofocus></textarea>\
-                <input type="submit" value="Post"></pre>\
+                 <textarea name="reply" class="col-sm-6" required></textarea>\
+                <input type="submit" value="Post">\
             </form>';}
-            else{
-                document.getElementById('reply'+parent).innerHTML="";
+
+      else{
+                console.log("hyyuyu");
+                document.getElementById('replyBox'+parent).innerHTML="";
             }
-    @else
-            alert('Please login!');
-    @endauth
 }
-function loadComments(parent){
+
+
+function loadComments(parent){ 
     console.log('loadComments called with parent as ', parent);
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
      console.log(this.responseText);
      var p = JSON.parse(this.response);
+     
      console.log(p.length);
      var allReplies = "";
-     var level = getCommentLevel('childReplies'+parent);
-     level++;
+    //  var level = getCommentLevel('childReplies'+parent);
+    //  level++;
      for(var i = 0; i < p.length; i++){
-        for(var j = 0; j< level;j++){
-            allReplies += "----";
-        }
+        // for(var j = 0; j< level;j++){
+        //     allReplies += "----";
+        // }
         allReplies += p[i].reply + "----posted by: "+ p[i].name+ "  id:" + p[i].id;
         if(p[i].has_child){
             allReplies +=  "<button onclick='loadComments("+p[i].id+")' id='loadCommentsBtn"+p[i].id +"'>Load Comments </button></div>"
         }
         allReplies += "<a href='#' onclick= 'displayreplybar("+p[i].id+")'>Reply</a>"
         allReplies += "<div id='reply"+p[i].id+"'></div>";
-        allReplies += "<div id='childReplies"+p[i].id+"'></div>";
+        allReplies += "<div id='childReplies"+p[i].id+"' class = 'comments'></div>";
      }
      console.log('all replies are',allReplies);
      console.log('the div name for comments container be: childReplies'+parent);
      document.getElementById('childReplies'+parent).innerHTML = allReplies;
-     document.getElementById('loadCommentsBtn'+parent).style.visibility = "hidden";
+     document.getElementById('loadCommentsBtn'+parent).style.display = "none";
     }
   };
   xhttp.open("GET", "/getChildReplies/"+parent, true);
   xhttp.send();
 }
-
 function getCommentLevel(divId){
     var ctr = 0;
     var x = document.getElementById(divId);
@@ -107,6 +113,96 @@ function getCommentLevel(divId){
     }
     console.log('final ctr value:',ctr);
     return ctr;
+}
+window.onload = loadCommentsViaJs();
+
+function loadCommentsViaJs(){
+    console.log(window.location.pathname);
+    var p = window.location.pathname;
+    var x = '/getTreeAsJson/'+p.substr(12);
+    // console.log(x);
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+        var flatArray = JSON.parse(this.response);
+        console.log(flatArray);
+        for(var i = 0; i < flatArray.length; i++){
+            var div = document.createElement('div');
+            var userNameText = document.createTextNode(flatArray[i].name.toUpperCase());
+            var tnode = document.createTextNode(flatArray[i].reply+" id:"+flatArray[i].id);
+            var replybtn = document.createElement('a');
+            replybtn.appendChild(document.createTextNode('Reply'));
+            // replybtn.className = 'btn-primary col-sm-1 ';
+            div.appendChild(userNameText);
+            div.appendChild(document.createElement('br'));
+            div.appendChild(tnode);
+            var spanForReplyAndExpand = document.createElement('span');
+            div.appendChild(spanForReplyAndExpand);
+            spanForReplyAndExpand.appendChild(replybtn);
+            if(flatArray[i].has_child){
+                var expandCommentsBtn = document.createElement('a');
+                expandCommentsBtn.appendChild(document.createTextNode(' Expand'));
+                expandCommentsBtn.id = "expandComments"+flatArray[i].id;
+                expandCommentsBtn.onclick = function (parent){
+                    return function(){
+                        var x = document.getElementById('comment'+parent).childNodes;
+                        if(document.getElementById('expandComments'+parent).innerHTML == ' Expand'){
+                            for(var i = 0; i < x.length; i++){
+                                if(x[i].className && x[i].className.match(/hideC/)){
+                                    x[i].className = "card card-body comments";
+                                }
+                            }
+                            document.getElementById('expandComments'+parent).innerHTML = ' Collapse';
+                        }
+                        else{
+                            for(var i = 0; i < x.length; i++){
+                                if(x[i].className && x[i].className.match(/comments/)){
+                                    x[i].className = "card card-body comments hideC";
+                                }
+                            }
+                            document.getElementById('expandComments'+parent).innerHTML = ' Expand';
+                        }
+                    }
+                }(flatArray[i].id);
+                spanForReplyAndExpand.appendChild(expandCommentsBtn);
+            }
+            div.id = 'comment'+flatArray[i].id;
+            div.className = "card card-body comments ";
+            var replyBox = document.createElement('div');
+            replyBox.id = 'replyBox'+flatArray[i].id;
+            div.appendChild(replyBox);
+            var temp = flatArray[i].id;
+            
+            if(flatArray[i].parent == 0){
+                document.getElementById('cc').appendChild(div);
+            }
+            else{
+                document.getElementById('comment'+flatArray[i].parent).appendChild(div);
+                div.className += "hideC";
+            }
+            replybtn.onclick = function (parent){
+                return function (){
+                    var tempNode = document.getElementById('replyBox'+parent);
+                    if(tempNode.style.display == 'block'){
+                        tempNode.style.display = 'none';
+                        return;
+                    }
+                    else{
+                        document.getElementById('replyBox'+parent).innerHTML='<form action="/postReply" method="POST">\
+                        @csrf\
+                        <input type="hidden" name="parent" value="'+parent+'">\
+                        <textarea name="reply" class="col-sm-6" required></textarea>\
+                        <input type="submit" value="Post">\
+                        </form>';
+                        document.getElementById('replyBox'+parent).style.display = 'block';
+                    }
+                }
+            }(flatArray[i].id);
+        }
+    }
+}
+    xhttp.open('GET', x , true);
+    xhttp.send();    
 }
 </script>
 @endsection
