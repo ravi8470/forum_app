@@ -17,6 +17,8 @@ Route::get('/', 'HomeController@renderHome');
 
 Route::get('/home','HomeController@renderHome');
 
+Route::get('/profile','UserController@renderProfile')->name('profile');
+
 Auth::routes();
 
 Route::get('/createThread',function(){
@@ -31,4 +33,4 @@ Route::post('/postReply', 'ReplyController@postReply');
 
 Route::get('/getChildReplies/{parent}','ReplyController@getChildReplies');
 
-Route::get('/getTreeAsJson/{threadId}','ThreadController@getTreeAsJson');
+Route::get('/getTreeAsJson/{threadId}/{offset}','ThreadController@getTreeAsJson');

@@ -26,13 +26,6 @@ class ThreadController extends Controller
     }
 
     public static function showThread($threadId){
-        $allC = Reply::select('*')->where('thread_id','=',$threadId)->get()->toArray();
-        //dd($allC);
-        $tree = new Tree($allC);
-
-        Log::debug('*********'.$tree);
-        // dump($tree);
-        $treeJson = json_encode($tree->getNodes());
         // $rootNodes = $tree->getRootNodes();
         // $rootNodesNum = count($tree->getRootNodes());
         // // dd($tree->getRootNodes()[6]->getChildren()[0]->getFollowingSibling());
@@ -58,18 +51,29 @@ class ThreadController extends Controller
         $data = Thread::select('*')->where('id','=', $threadId)->get();
         Session::put('currThreadId' , ($data[0]->id ?? NULL));
         $userName = User::select('name')->where('id','=',$data[0]->user_id)->get()[0]->name;        
-        
-        $topComments = Reply::join('users','replies.user_id', '=', 'users.id')->select('users.name','replies.reply','replies.id','replies.has_child','replies.parent')->where([['replies.thread_id',
-         '=',$data[0]->id],['replies.parent',0]])->orderby('replies.updated_at','desc')->limit(8)->get();
         $x = session('savedReply') ?? NULL;
-        session()->forget('savedReply');
-        // $topComments = DB::select(DB::raw("WITH RECURSIVE childReplies AS( SELECT replies.id, reply, parent, name FROM replies INNER JOIN users ON 
-        // replies.user_id = users.id WHERE thread_id = :threadID
+            // $topComments = Reply::join('users','replies.user_id', '=', 'users.id')->select('users.name','replies.reply','replies.id','replies.has_child','replies.parent')->where([['replies.thread_id',
+        //  '=',$data[0]->id],['replies.parent',0]])->orderby('replies.updated_at','desc')->limit(8)->get();
+        
+        // session()->forget('savedReply');
+        // $topComments = DB::select(DB::raw("WITH RECURSIVE childReplies AS( (SELECT replies.* FROM replies WHERE thread_id = :threadID AND replies.parent = 0 ORDER BY replies.id LIMIT 3 )
         // UNION
-        // SELECT e.id, e.reply, e.parent, users.name FROM replies e INNER JOIN childReplies s ON s.id = e.parent INNER JOIN users ON 
-        // e.user_id = users.id) SELECT * FROM childReplies"),['threadID' => $data[0]->id]);
-        Log::debug('showthread() data and username and topcomments',['data'=> $data, 'usr'=>$userName, 'topc'=> $topComments]); 
-        return view('showThread',['data' => $data, 'userName'=> $userName, 'savedReply' =>$x, 'topComments' => $topComments,'treeJson' => $treeJson]);
+        // SELECT e.* FROM replies e INNER JOIN childReplies s ON s.id = e.parent) SELECT * FROM childReplies"),['threadID' => $data[0]->id]);
+        // $pp = array();
+        // $i = 0;
+        // foreach($topComments as $a){
+        //     $pp[$i] = (array)$a;
+        //     $i++;
+        // }
+        // $ccc = new Tree($pp);
+        // dd(response()->json($ccc->getNodes()));
+        $allC = Reply::join('users','replies.user_id', '=', 'users.id')->select('users.name','replies.*',)->where('thread_id','=',$threadId)->get()->toArray();
+        $tree = new Tree($allC);
+        // dd($tree);
+        // Log::debug('showthread() data and username and topcomments',['data'=> $data, 'usr'=>$userName, 'topc'=> $topComments]); 
+        $numPages = Reply::select('*')->where([['thread_id','=',$threadId],['parent',0]])->count();
+        $numPages = (int)ceil($numPages/6);
+        return view('showThread',['data' => $data, 'userName'=> $userName, 'savedReply' =>$x,'numPages'=>$numPages]);
     }
     public static function printNode($temp){
         Log::debug('printNode::'.$temp->id);
@@ -110,9 +114,22 @@ class ThreadController extends Controller
             }    
         }
     }
-    public function getTreeAsJson($threadId){
-        $allC = Reply::join('users','replies.user_id', '=', 'users.id')->select('users.name','replies.*',)->where('thread_id','=',$threadId)->get()->toArray();
-        $tree = new Tree($allC);
+    public function getTreeAsJson($threadId, $offset){
+        Log::debug('route hit getTreeAs Json with:',[$threadId,$offset]);
+        // $allC = Reply::join('users','replies.user_id', '=', 'users.id')->select('users.name','replies.*',)->where('thread_id','=',$threadId)->get()->toArray();
+        $allC = DB::select(DB::raw("WITH RECURSIVE childReplies AS( (SELECT replies.*, users.name FROM replies INNER JOIN users ON 
+        replies.user_id = users.id WHERE thread_id = :threadID AND replies.parent = 0 ORDER BY replies.id LIMIT 6 OFFSET :offset)
+        UNION
+        SELECT e.*, users.name FROM replies e INNER JOIN childReplies s ON s.id = e.parent INNER JOIN users ON 
+        e.user_id = users.id) SELECT * FROM childReplies"),['threadID' => $threadId, 'offset' => $offset*6]);
+        $temp = array();
+        $i = 0;
+        foreach($allC as $u){
+            $temp[$i] = (array)$u;
+            $i++;
+        }
+        $tree = new Tree($temp);
+        // dd($allC);
         return response()->json($tree->getNodes());
     }
 }

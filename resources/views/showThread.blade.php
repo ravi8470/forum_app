@@ -21,9 +21,7 @@
            <span class="align-content-end"> Posted by {{$userName}}</span>
         @endforeach
     @endif
-    <hr>
-
-    <br>
+    <hr><br>
     {{-- @if(isset($topComments))
         @foreach($topComments as $pp)
             @if($pp->parent == 0)
@@ -39,6 +37,20 @@
     @endif --}}
     <h3>Comments:</h3>
     <div id="cc"></div>
+    @if(isset($numPages) && $numPages > 1 )
+        @for ($i = 0; $i < $numPages && $i < 6; $i++)
+            <button onclick="loadCommentsViaJs({{$i}})">{{$i+1}}</button>
+        @endfor
+    @endif
+    
+        @if(isset($numPages) && $numPages > 1)
+            .. Jump to Page: <select>
+            @for ($i = 0; $i < $numPages && $i < 6; $i++)
+                <option onclick="loadCommentsViaJs({{$i}})">{{$i+1}}</option>
+            @endfor
+            </select><br>
+        @endif
+    
     @auth
             Post a Reply:
             <form action="/postReply" method="POST">
@@ -70,39 +82,6 @@ function displayreplybar(parent){
 }
 
 
-function loadComments(parent){ 
-    console.log('loadComments called with parent as ', parent);
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-     console.log(this.responseText);
-     var p = JSON.parse(this.response);
-     
-     console.log(p.length);
-     var allReplies = "";
-    //  var level = getCommentLevel('childReplies'+parent);
-    //  level++;
-     for(var i = 0; i < p.length; i++){
-        // for(var j = 0; j< level;j++){
-        //     allReplies += "----";
-        // }
-        allReplies += p[i].reply + "----posted by: "+ p[i].name+ "  id:" + p[i].id;
-        if(p[i].has_child){
-            allReplies +=  "<button onclick='loadComments("+p[i].id+")' id='loadCommentsBtn"+p[i].id +"'>Load Comments </button></div>"
-        }
-        allReplies += "<a href='#' onclick= 'displayreplybar("+p[i].id+")'>Reply</a>"
-        allReplies += "<div id='reply"+p[i].id+"'></div>";
-        allReplies += "<div id='childReplies"+p[i].id+"' class = 'comments'></div>";
-     }
-     console.log('all replies are',allReplies);
-     console.log('the div name for comments container be: childReplies'+parent);
-     document.getElementById('childReplies'+parent).innerHTML = allReplies;
-     document.getElementById('loadCommentsBtn'+parent).style.display = "none";
-    }
-  };
-  xhttp.open("GET", "/getChildReplies/"+parent, true);
-  xhttp.send();
-}
 function getCommentLevel(divId){
     var ctr = 0;
     var x = document.getElementById(divId);
@@ -114,13 +93,15 @@ function getCommentLevel(divId){
     console.log('final ctr value:',ctr);
     return ctr;
 }
-window.onload = loadCommentsViaJs();
+window.onload = loadCommentsViaJs(0);
 
-function loadCommentsViaJs(){
-    console.log(window.location.pathname);
+function loadCommentsViaJs(offset){
+    // console.log(window.location.pathname);
+    console.log('loadcomm called with: ',offset); 
+    document.getElementById('cc').innerHTML = "";
     var p = window.location.pathname;
-    var x = '/getTreeAsJson/'+p.substr(12);
-    // console.log(x);
+    var x = '/getTreeAsJson/'+p.substr(12)+'/'+offset;
+    console.log(x);
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
@@ -188,12 +169,16 @@ function loadCommentsViaJs(){
                         return;
                     }
                     else{
+                        @auth
                         document.getElementById('replyBox'+parent).innerHTML='<form action="/postReply" method="POST">\
                         @csrf\
                         <input type="hidden" name="parent" value="'+parent+'">\
                         <textarea name="reply" class="col-sm-6" required></textarea>\
                         <input type="submit" value="Post">\
                         </form>';
+                        @else
+                        document.getElementById('replyBox'+parent).innerHTML="please <a href='{{route("login")}}'>Login </a>";
+                        @endauth
                         document.getElementById('replyBox'+parent).style.display = 'block';
                     }
                 }
