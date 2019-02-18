@@ -13,7 +13,7 @@
         <li>{{$section}}</li>
         <ul class="list-group col-sm-10">
         @foreach ($arr as  $id)
-            <a href="/showThread/{{$id->id}}"><li class="list-group-item">{{$id->title}}<br><span>{{$id->count}} Replies</span></li></a>
+            <a href="/showThread/{{$id->id}}"><li class="list-group-item">{{$id->title}}<br><span>Replies: {{$id->count}}</span></li></a>
         @endforeach    
         </ul>
     @endforeach
