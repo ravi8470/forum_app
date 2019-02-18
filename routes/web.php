@@ -22,7 +22,7 @@ Route::get('/profile','UserController@renderProfile')->name('profile');
 Auth::routes();
 
 Route::get('/createThread',function(){
-    return view('createThread');
+    return view('createThread',['allSections'=>array('Sports', 'Education','Business','Chit Chat','Anything Else')]);
 })->name('createThread');
 
 Route::post('/createThread', 'ThreadController@createThread');

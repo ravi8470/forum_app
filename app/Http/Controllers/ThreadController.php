@@ -14,6 +14,11 @@ use Illuminate\Support\Facades\Session;
 
 class ThreadController extends Controller
 {
+    // public function showCreateThreadPage(){
+    //     $allSections = array('Sports', 'Education','Business','Chit Chat','Anything Else');
+    //     return view('createThread',['allSections'=>$allSections]);
+    // }
+    
     public function createThread(Request $request){
         $saved = Thread::store($request);
         Log::debug('printing value of $saved...'.$saved);
