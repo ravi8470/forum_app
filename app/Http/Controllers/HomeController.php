@@ -16,7 +16,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        // $this->middleware('auth');
     }
     public function renderHome(){
         Log::debug('home contrllr renderhome()'.dirname(__DIR__));
