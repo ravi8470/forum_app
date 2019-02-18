@@ -122,7 +122,7 @@ function loadCommentsViaJs(offset){
             spanForReplyAndExpand.appendChild(replybtn);
             if(flatArray[i].has_child){
                 var expandCommentsBtn = document.createElement('a');
-                expandCommentsBtn.appendChild(document.createTextNode(' Expand'));
+                expandCommentsBtn.appendChild(document.createTextNode(' Collapse'));
                 expandCommentsBtn.id = "expandComments"+flatArray[i].id;
                 expandCommentsBtn.onclick = function (parent){
                     return function(){
@@ -159,7 +159,7 @@ function loadCommentsViaJs(offset){
             }
             else{
                 document.getElementById('comment'+flatArray[i].parent).appendChild(div);
-                div.className += "hideC";
+                // div.className += "hideC";
             }
             replybtn.onclick = function (parent){
                 return function (){
