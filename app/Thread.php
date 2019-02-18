@@ -27,7 +27,14 @@ class Thread extends Model
             $pp[$sec] = Thread::select('title','id')->where('section','=',$sec)->limit(50)->get();
             // Log::debug($pp[$sec]);
         }
-        // dd($pp);
+        foreach($pp as $sec){
+            foreach($sec as $x){
+                $x->count = Reply::select('replies.id')->where('replies.thread_id','=',$x->id)->count();
+                // dump($x);
+            }
+        }
+        // $pp['Section1'][0]->count = 6;
+        // dd($pp['Section1'][0]->count);    
         return $pp;
     }
 }

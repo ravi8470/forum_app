@@ -12,8 +12,8 @@
     @foreach ($sections as $section => $arr)
         <li>{{$section}}</li>
         <ul class="list-group col-sm-10">
-        @foreach ($arr as $title =>$id)
-            <a href="/showThread/{{$id->id}}"><li class="list-group-item">{{$id->title}}</li></a>
+        @foreach ($arr as  $id)
+            <a href="/showThread/{{$id->id}}"><li class="list-group-item">{{$id->title}}<br><span>{{$id->count}} Replies</span></li></a>
         @endforeach    
         </ul>
     @endforeach
