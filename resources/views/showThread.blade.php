@@ -156,6 +156,7 @@ function loadCommentsViaJs(offset){
             
             if(flatArray[i].parent == 0){
                 document.getElementById('cc').appendChild(div);
+                document.getElementById('cc').appendChild(document.createElement('br'));
             }
             else{
                 document.getElementById('comment'+flatArray[i].parent).appendChild(div);
