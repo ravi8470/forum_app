@@ -110,7 +110,7 @@ function loadCommentsViaJs(offset){
         for(var i = 0; i < flatArray.length; i++){
             var div = document.createElement('div');
             var userNameText = document.createTextNode(flatArray[i].name.toUpperCase());
-            var tnode = document.createTextNode(flatArray[i].reply+" id:"+flatArray[i].id);
+            var tnode = document.createTextNode(flatArray[i].reply);
             var replybtn = document.createElement('a');
             replybtn.appendChild(document.createTextNode('Reply'));
             // replybtn.className = 'btn-primary col-sm-1 ';
