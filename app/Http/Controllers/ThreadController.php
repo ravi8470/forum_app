@@ -55,7 +55,7 @@ class ThreadController extends Controller
             // $topComments = Reply::join('users','replies.user_id', '=', 'users.id')->select('users.name','replies.reply','replies.id','replies.has_child','replies.parent')->where([['replies.thread_id',
         //  '=',$data[0]->id],['replies.parent',0]])->orderby('replies.updated_at','desc')->limit(8)->get();
         
-        // session()->forget('savedReply');
+        session()->forget('savedReply');
         // $topComments = DB::select(DB::raw("WITH RECURSIVE childReplies AS( (SELECT replies.* FROM replies WHERE thread_id = :threadID AND replies.parent = 0 ORDER BY replies.id LIMIT 3 )
         // UNION
         // SELECT e.* FROM replies e INNER JOIN childReplies s ON s.id = e.parent) SELECT * FROM childReplies"),['threadID' => $data[0]->id]);
