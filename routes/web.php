@@ -17,7 +17,9 @@ Route::get('/', 'HomeController@renderHome');
 
 Route::get('/home','HomeController@renderHome');
 
-Route::get('/profile','UserController@renderProfile')->name('profile');
+Route::get('/profile/{userId}','UserController@renderProfile')->name('profile');
+
+Route::post('/postMsg','UserController@postMsg');
 
 Auth::routes();
 
