@@ -16,7 +16,7 @@
             <p class="card-text">Total Replies: {{$totalReplies ?? NULL}}</p>
             @auth
                 @if(Auth::user()->id != $match[1])
-                    <div id="msgContainer"><a class="btn btn-primary" style="margin-left: 38%" onclick="displaySendMsgBox()">Send Message</a></div>
+                    <span id="msgContainer" ><a class="btn btn-primary" style="vertical-align: middle" onclick="displaySendMsgBox()">Send Message</a></span>
                 @endif
             @else
                 Please <a href="{{route('login')}}">Login</a> to send a msg.
