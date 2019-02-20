@@ -21,11 +21,13 @@ Route::get('/profile/{userId}','UserController@renderProfile')->name('profile');
 
 Route::post('/postMsg','UserController@postMsg');
 
+Route::get('/inbox','UserController@renderInbox')->name('inbox')->middleware('auth');
+
 Auth::routes();
 
 Route::get('/createThread',function(){
     return view('createThread',['allSections'=>array('Sports', 'Education','Business','Chit Chat','Anything Else')]);
-})->name('createThread');
+})->name('createThread')->middleware('auth');
 
 Route::post('/createThread', 'ThreadController@createThread');
 
