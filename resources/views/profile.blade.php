@@ -5,8 +5,8 @@
      preg_match('#/profile/([0-9]+)#', Request::url(), $match);
 @endphp    
 <div id="msgStatus"></div>
-<div class="container" style="margin-left:25%;margin-right: 25%">
-    <div class="card" style="width:50%">
+<div class="container" style="max-width:500px">
+    <div class="card">
         <img class="card-img-top" src="{{asset('img/img_avatar1.png') }}" >
         {{-- substr value to be changed before pushing to heroku  --}}
         <div class="card-body">
@@ -16,10 +16,10 @@
             <p class="card-text">Total Replies: {{$totalReplies ?? NULL}}</p>
             @auth
                 @if(Auth::user()->id != $match[1])
-                <div id="msgContainer"><a class="btn btn-primary" style="margin-left: 38%" onclick="displaySendMsgBox()">Send Message</a></div>
+                    <div id="msgContainer"><a class="btn btn-primary" style="margin-left: 38%" onclick="displaySendMsgBox()">Send Message</a></div>
                 @endif
             @else
-            Please <a href="{{route('login')}}">Login</a> to send a msg.
+                Please <a href="{{route('login')}}">Login</a> to send a msg.
             @endauth
         </div>
     </div>
@@ -29,7 +29,7 @@
     function displaySendMsgBox(){
         document.getElementById('msgContainer').innerHTML = '\
         <input type="textarea" id="msgBox" style="width:75%; margin-left:7%" maxlength="20" required minlength="2" name="msg">\
-        <button onclick="postMsg('+{{Auth::user()->id}}+ ',' + {{$match[1]}} +  ')"> Send</button>\
+        <button onclick="postMsg('+@auth{{Auth::user()->id}}@endauth+ ',' + {{$match[1]}} +  ')"> Send</button>\
         </form>';
     }
 
