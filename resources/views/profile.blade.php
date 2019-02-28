@@ -27,16 +27,13 @@
 </div>
 <script>
     function displaySendMsgBox(){
-        document.getElementById('msgContainer').innerHTML = '\
-        <input type="textarea" id="msgBox" style="width:75%; margin-left:7%" maxlength="20" required minlength="2" name="msg">\
-        <button onclick="postMsg('+@auth{{Auth::user()->id}}@endauth+ ',' + {{$match[1]}} +  ')"> Send</button>\
+        document.getElementById('msgContainer').innerHTML = '<input type="textarea" id="msgBox" style="width:75%;margin-left:7%" maxlength="100" required minlength="2" name="msg">\
+        <button onclick="postMsg('+{{$match[1]}} +')"> Send</button>\
         </form>';
     }
 
 
-    function postMsg(from_id,to_id){
-        console.log('from and to:',from_id,to_id);
-        console.log(document.getElementById('msgBox').value);
+    function postMsg(to_id){
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
@@ -56,7 +53,7 @@
         }
         xhttp.open("POST","/postMsg", true);
         xhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-        xhttp.send("from_id="+from_id+"&to_id="+to_id+"&msg="+document.getElementById('msgBox').value);
+        xhttp.send("to_id="+to_id+"&msg="+document.getElementById('msgBox').value);
     }
 </script> 
 @endsection

@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+Auth::routes();
 Route::get('/', 'HomeController@renderHome');
 
 Route::get('/home','HomeController@renderHome');
@@ -23,7 +23,9 @@ Route::post('/postMsg','UserController@postMsg');
 
 Route::get('/inbox','UserController@renderInbox')->name('inbox')->middleware('auth');
 
-Auth::routes();
+Route::get('/getNewMsgCount','UserController@getNewMsgCount')->middleware('auth');
+
+Route::get('/getConvo/{from_id}','UserController@getConvo');
 
 Route::get('/createThread',function(){
     return view('createThread',['allSections'=>array('Sports', 'Education','Business','Chit Chat','Anything Else')]);

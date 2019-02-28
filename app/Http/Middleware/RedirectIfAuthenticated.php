@@ -3,6 +3,8 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Routing\Redirector;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 
 class RedirectIfAuthenticated
@@ -22,5 +24,9 @@ class RedirectIfAuthenticated
         }
 
         return $next($request);
+    }
+
+    public function redirectTo(){
+
     }
 }

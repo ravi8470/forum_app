@@ -11,14 +11,14 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
-
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
 
     <!-- Styles -->
     <link href="{{asset('/css/app.css') }}" rel="stylesheet">
-    <link href="{{asset('/css/showThread.css')}}" rel="stylesheet">
+    @yield('assets')   
+    
 </head>
 <body>
     <div id="app">
@@ -57,7 +57,7 @@
                         <a class="dropdown-item" href="/profile/{{Auth::user()->id}}">Profile</a>
                             <a class="dropdown-item" href="{{ route('logout') }}"
                                 onclick="event.preventDefault();
-                                                document.getElementById('logout-form').submit();">
+                                document.getElementById('logout-form').submit();">
                                 {{ __('Logout') }}
                             </a>
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
@@ -66,17 +66,40 @@
                         </div>
                     </li>
                     <li class="nav-item">
-                    <a href="{{route('createThread')}}" class="nav-link">Create Thread</a>
+                        <a href="{{route('createThread')}}" class="nav-link">Create Thread</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('inbox') }}" class="nav-link" id="InboxBtn">Inbox<span class="glyphicon glyphicon-envelope"></span></a>
                     </li>
                 @endguest
             </ul>
         </div>
     </div>
 </nav>
-
+<div id="newMsgAlert"></div>
         <main class="py-4">
             @yield('content')
         </main>
     </div>
+<script>
+    @auth
+        window.onload = getNewMsgCount();
+    @endauth
+    function getNewMsgCount(){
+        console.log('getnewmsg count called');
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                console.log(this.response);
+                if(this.response > 0){
+                    document.getElementById('InboxBtn').innerHTML = 'Inbox('+this.response+')';
+                    document.getElementById('InboxBtn').style.color = 'Green';
+                }
+            }
+        }
+        xhttp.open('GET', '/getNewMsgCount' , true);
+        xhttp.send();
+    }
+</script>
 </body>
 </html>

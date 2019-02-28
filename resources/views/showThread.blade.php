@@ -1,5 +1,7 @@
 @extends('layouts.app')
-
+@section('assets')
+    <link rel="stylesheet" href="{{asset('/css/showThread.css')}}">
+@endsection
 @section('content')
     @if($savedReply ?? false)
         <div class="alert alert-success alert-dismissible col-sm-6">
@@ -64,131 +66,130 @@
     @endauth
             
 <script>
-function displayreplybar(parent){
-    console.log('displayreplybar for id:', parent);
-    if(document.getElementById('replyBox'+parent).innerHTML==""){
-    console.log('hgjhgjhg'+parent);
-    document.getElementById('replyBox'+parent).innerHTML='<form action="/postReply" method="POST">\
-                @csrf\
-                <input type="hidden" name="parent" value="'+parent+'">\
-                 <textarea name="reply" class="col-sm-6" required></textarea>\
-                <input type="submit" value="Post">\
-            </form>';}
+    function displayreplybar(parent){
+        console.log('displayreplybar for id:', parent);
+        if(document.getElementById('replyBox'+parent).innerHTML==""){
+        console.log('hgjhgjhg'+parent);
+        document.getElementById('replyBox'+parent).innerHTML='<form action="/postReply" method="POST">\
+                    @csrf\
+                    <input type="hidden" name="parent" value="'+parent+'">\
+                    <textarea name="reply" class="col-sm-6" required></textarea>\
+                    <input type="submit" value="Post">\
+                </form>';}
 
-      else{
-                console.log("hyyuyu");
-                document.getElementById('replyBox'+parent).innerHTML="";
-            }
-}
-
-
-function getCommentLevel(divId){
-    var ctr = 0;
-    var x = document.getElementById(divId);
-    while(x.parentNode.id.match(/childReplies/)){
-        ctr++;
-        x = x.parentNode;
-        console.log('cureent node is',x,'ctr is ',ctr);
+        else{
+                    console.log("hyyuyu");
+                    document.getElementById('replyBox'+parent).innerHTML="";
+                }
     }
-    console.log('final ctr value:',ctr);
-    return ctr;
-}
-window.onload = loadCommentsViaJs(0);
+    function getCommentLevel(divId){
+        var ctr = 0;
+        var x = document.getElementById(divId);
+        while(x.parentNode.id.match(/childReplies/)){
+            ctr++;
+            x = x.parentNode;
+            console.log('cureent node is',x,'ctr is ',ctr);
+        }
+        console.log('final ctr value:',ctr);
+        return ctr;
+    }
+    window.onload = loadCommentsViaJs(0);
 
-function loadCommentsViaJs(offset){
-    // console.log(window.location.pathname);
-    console.log('loadcomm called with: ',offset); 
-    document.getElementById('cc').innerHTML = "";
-    var p = window.location.pathname;
-    var x = '/getTreeAsJson/'+p.substr(12)+'/'+offset;
-    console.log(x);
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-        var flatArray = JSON.parse(this.response);
-        console.log(flatArray);
-        for(var i = 0; i < flatArray.length; i++){
-            var div = document.createElement('div');
-            var userNameText = document.createTextNode(flatArray[i].name.toUpperCase());
-            var tnode = document.createTextNode(flatArray[i].reply);
-            var replybtn = document.createElement('a');
-            replybtn.appendChild(document.createTextNode('Reply'));
-            // replybtn.className = 'btn-primary col-sm-1 ';
-            div.appendChild(userNameText);
-            div.appendChild(document.createElement('br'));
-            div.appendChild(tnode);
-            var spanForReplyAndExpand = document.createElement('span');
-            div.appendChild(spanForReplyAndExpand);
-            spanForReplyAndExpand.appendChild(replybtn);
-            if(flatArray[i].has_child){
-                var expandCommentsBtn = document.createElement('a');
-                expandCommentsBtn.appendChild(document.createTextNode(' Collapse'));
-                expandCommentsBtn.id = "expandComments"+flatArray[i].id;
-                expandCommentsBtn.onclick = function (parent){
-                    return function(){
-                        var x = document.getElementById('comment'+parent).childNodes;
-                        if(document.getElementById('expandComments'+parent).innerHTML == ' Expand'){
-                            for(var i = 0; i < x.length; i++){
-                                if(x[i].className && x[i].className.match(/hideC/)){
-                                    x[i].className = "card card-body comments";
+    function loadCommentsViaJs(offset){
+        // console.log(window.location.pathname);
+        console.log('loadcomm called with: ',offset); 
+        document.getElementById('cc').innerHTML = "";
+        var p = window.location.pathname;
+        var x = '/getTreeAsJson/'+p.substr(12)+'/'+offset;
+        console.log(x);
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            var flatArray = JSON.parse(this.response);
+            console.log(flatArray);
+            for(var i = 0; i < flatArray.length; i++){
+                var div = document.createElement('div');
+                var userNameText = document.createTextNode(flatArray[i].name.toUpperCase());
+                var tnode = document.createTextNode(flatArray[i].reply);
+                var replybtn = document.createElement('a');
+                replybtn.appendChild(document.createTextNode('Reply'));
+                // replybtn.className = 'btn-primary col-sm-1 ';
+                div.appendChild(userNameText);
+                div.appendChild(document.createElement('br'));
+                div.appendChild(tnode);
+                var spanForReplyAndExpand = document.createElement('span');
+                div.appendChild(spanForReplyAndExpand);
+                spanForReplyAndExpand.appendChild(replybtn);
+                if(flatArray[i].has_child){
+                    var expandCommentsBtn = document.createElement('a');
+                    expandCommentsBtn.appendChild(document.createTextNode(' Collapse'));
+                    expandCommentsBtn.id = "expandComments"+flatArray[i].id;
+                    expandCommentsBtn.onclick = function (parent){
+                        return function(){
+                            var x = document.getElementById('comment'+parent).childNodes;
+                            if(document.getElementById('expandComments'+parent).innerHTML == ' Expand'){
+                                for(var i = 0; i < x.length; i++){
+                                    if(x[i].className && x[i].className.match(/hideC/)){
+                                        console.log('hits');
+                                        x[i].className = "card card-body comments";
+                                    }
                                 }
+                                document.getElementById('expandComments'+parent).innerHTML = ' Collapse';
                             }
-                            document.getElementById('expandComments'+parent).innerHTML = ' Collapse';
+                            else{
+                                for(var i = 0; i < x.length; i++){
+                                    if(x[i].className && x[i].className.match(/comments/)){
+                                        x[i].className = "card card-body comments hideC";
+                                    }
+                                }
+                                document.getElementById('expandComments'+parent).innerHTML = ' Expand';
+                            }
+                        }
+                    }(flatArray[i].id);
+                    spanForReplyAndExpand.appendChild(expandCommentsBtn);
+                }
+                div.id = 'comment'+flatArray[i].id;
+                div.className = "card card-body comments ";
+                var replyBox = document.createElement('div');
+                replyBox.id = 'replyBox'+flatArray[i].id;
+                div.appendChild(replyBox);
+                var temp = flatArray[i].id;
+                
+                if(flatArray[i].parent == 0){
+                    document.getElementById('cc').appendChild(div);
+                    document.getElementById('cc').appendChild(document.createElement('br'));
+                }
+                else{
+                    document.getElementById('comment'+flatArray[i].parent).appendChild(div);
+                    // div.className += "hideC";
+                }
+                replybtn.onclick = function (parent){
+                    return function (){
+                        var tempNode = document.getElementById('replyBox'+parent);
+                        if(tempNode.style.display == 'block'){
+                            tempNode.style.display = 'none';
+                            return;
                         }
                         else{
-                            for(var i = 0; i < x.length; i++){
-                                if(x[i].className && x[i].className.match(/comments/)){
-                                    x[i].className = "card card-body comments hideC";
-                                }
-                            }
-                            document.getElementById('expandComments'+parent).innerHTML = ' Expand';
+                            @auth
+                            document.getElementById('replyBox'+parent).innerHTML='<form action="/postReply" method="POST">\
+                            @csrf\
+                            <input type="hidden" name="parent" value="'+parent+'">\
+                            <textarea name="reply" class="col-sm-6" required></textarea>\
+                            <input type="submit" value="Post">\
+                            </form>';
+                            @else
+                            document.getElementById('replyBox'+parent).innerHTML="please <a href='{{route("login")}}'>Login </a>";
+                            @endauth
+                            document.getElementById('replyBox'+parent).style.display = 'block';
                         }
                     }
                 }(flatArray[i].id);
-                spanForReplyAndExpand.appendChild(expandCommentsBtn);
             }
-            div.id = 'comment'+flatArray[i].id;
-            div.className = "card card-body comments ";
-            var replyBox = document.createElement('div');
-            replyBox.id = 'replyBox'+flatArray[i].id;
-            div.appendChild(replyBox);
-            var temp = flatArray[i].id;
-            
-            if(flatArray[i].parent == 0){
-                document.getElementById('cc').appendChild(div);
-                document.getElementById('cc').appendChild(document.createElement('br'));
-            }
-            else{
-                document.getElementById('comment'+flatArray[i].parent).appendChild(div);
-                // div.className += "hideC";
-            }
-            replybtn.onclick = function (parent){
-                return function (){
-                    var tempNode = document.getElementById('replyBox'+parent);
-                    if(tempNode.style.display == 'block'){
-                        tempNode.style.display = 'none';
-                        return;
-                    }
-                    else{
-                        @auth
-                        document.getElementById('replyBox'+parent).innerHTML='<form action="/postReply" method="POST">\
-                        @csrf\
-                        <input type="hidden" name="parent" value="'+parent+'">\
-                        <textarea name="reply" class="col-sm-6" required></textarea>\
-                        <input type="submit" value="Post">\
-                        </form>';
-                        @else
-                        document.getElementById('replyBox'+parent).innerHTML="please <a href='{{route("login")}}'>Login </a>";
-                        @endauth
-                        document.getElementById('replyBox'+parent).style.display = 'block';
-                    }
-                }
-            }(flatArray[i].id);
         }
     }
-}
-    xhttp.open('GET', x , true);
-    xhttp.send();    
-}
+        xhttp.open('GET', x , true);
+        xhttp.send();    
+    }
 </script>
 @endsection
