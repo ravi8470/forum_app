@@ -47,7 +47,6 @@ class LoginController extends Controller
     }
 
     public function handleProviderCallback(){
-        Log::debug('hit the handleProviderCallback');
         try {
             $user = Socialite::driver('google')->user();
         } catch (Exception $e) {
