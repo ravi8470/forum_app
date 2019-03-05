@@ -3,7 +3,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
+    <meta name="google-signin-client_id" content="664887441740-epd8mikfl872l1393l14v7o41e94pq7h.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -47,6 +49,9 @@
                             <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
                         </li>
                     @endif
+                    <li class="nav-item">
+                            <a href="{{route('googleLogin')}}" class="nav-link">GLogin</a>
+                    </li>   
                 @else
                     <li class="nav-item dropdown">
                         <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -76,7 +81,8 @@
         </div>
     </div>
 </nav>
-<div id="newMsgAlert"></div>
+{{-- <div id="googleSigninStuff"></div>
+<img  id='profilepic' src="" width="100px" height="100px"/> --}}
         <main class="py-4">
             @yield('content')
         </main>
@@ -85,6 +91,12 @@
     @auth
         window.onload = getNewMsgCount();
     @endauth
+    // function onSignIn(verifiedGoogleUser){
+    //     var profile = verifiedGoogleUser.getBasicProfile();
+    //     var email = profile.getEmail();
+    //     document.getElementById('profilepic').src = profile.getImageUrl();
+    //     document.getElementById('googleSigninStuff').innerHTML = email;
+    // }
     function getNewMsgCount(){
         console.log('getnewmsg count called');
         var xhttp = new XMLHttpRequest();

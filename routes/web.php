@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Auth\LoginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,7 +14,12 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 Auth::routes();
-Route::get('/', 'HomeController@renderHome');
+
+Route::get('/googleLogin','Auth\LoginController@redirectToProvider')->name('googleLogin');
+
+Route::get('/callback', 'Auth\LoginController@handleProviderCallback');
+
+Route::get('/', 'HomeController@renderHome')->name('home');
 
 Route::get('/home','HomeController@renderHome');
 
