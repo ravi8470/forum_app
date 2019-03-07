@@ -18,6 +18,7 @@ class ReplyController extends Controller
         
     }
     public function getChildReplies($parent){
+        $x = array();
         //Log::debug('getChildReplies of ReplyController called wiht parent as : '.$parent);
         $childReplies = Reply::join('users','replies.user_id', '=', 'users.id')->select('users.name','replies.reply','replies.id','replies.has_child','replies.parent')->where([['replies.parent',
         '=',$parent]])->orderby('replies.updated_at','desc')->get();
