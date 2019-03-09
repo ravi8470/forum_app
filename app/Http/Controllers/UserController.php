@@ -66,11 +66,13 @@ class UserController extends Controller
         return response()->json($count);
     }
     
-    public function renderProfile($userId){
-        $totalThreads = Thread::select('*')->where('threads.user_id','=',$userId)->count();
-        $totalReplies = Reply::select('*')->where('replies.user_id','=',$userId)->count();
-        $email = User::select('email')->where('users.id','=',$userId)->get();
-        $name = User::select('name')->where('users.id','=',$userId)->get();
+    public function renderProfile(User $userId){
+        $totalThreads = Thread::select('*')->where('threads.user_id','=',$userId->id)->count();
+        $totalReplies = Reply::select('*')->where('replies.user_id','=',$userId->id)->count();
+        // $email = User::select('email')->where('users.id','=',$userId)->get();
+        // $name = User::select('name')->where('users.id','=',$userId)->get();
+        $email = $userId->email;
+        $name = $userId->name;
         return view('profile', ['totalThreads' => $totalThreads, 'totalReplies'=>$totalReplies, 'email'=>$email, 'name' => $name]);
     }
 
