@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="google-signin-client_id" content="664887441740-epd8mikfl872l1393l14v7o41e94pq7h.apps.googleusercontent.com">
     <script src="https://apis.google.com/js/platform.js" async defer></script>
-    
+    <script src="https://js.pusher.com/4.4/pusher.min.js"></script>
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -13,6 +13,7 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
+    <script type="text/javascript" src="{{asset('/js/echo.js')}}"></script>
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
@@ -91,6 +92,10 @@
     @auth
         window.onload = getNewMsgCount();
     @endauth
+    var module = { };
+    window.Echo.channel('MessageFromTo').listen('newMessage',()=>{
+        console.log('dkdkdkdkd');
+    });
     // function onSignIn(verifiedGoogleUser){
     //     var profile = verifiedGoogleUser.getBasicProfile();
     //     var email = profile.getEmail();
@@ -98,7 +103,6 @@
     //     document.getElementById('googleSigninStuff').innerHTML = email;
     // }
     function getNewMsgCount(){
-        console.log('getnewmsg count called');
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {

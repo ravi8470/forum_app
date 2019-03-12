@@ -21,10 +21,10 @@ class newMessage implements ShouldBroadcastNow
      *
      * @return void
      */
-    public $msg;
+    public $mesg;
     public function __construct(Message $temp)
     {
-        $this->msg = $temp;
+        $this->mesg = $temp;
     }
 
     /**
@@ -34,7 +34,16 @@ class newMessage implements ShouldBroadcastNow
      */
     public function broadcastOn()
     {
-        // return new Channel('MessageToFrom'.$this->msg->from_id.$this->msg->to_id);
+        // return new Channel('MessageToFrom'.$this->mesg->from_id.$this->mesg->to_id);
         return new Channel('MessageToFrom');
     }
+
+    public function broadcastWith()
+    {
+        return [
+            'msg' => $this->mesg->msg,
+            'created_at' => $this->mesg->created_at,
+        ];
+    }
+
 }

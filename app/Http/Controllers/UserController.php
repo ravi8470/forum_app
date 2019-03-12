@@ -78,7 +78,7 @@ class UserController extends Controller
     }
 
     public function postMsg(Request $request){
-        Log::info("from postMsg@UserCntlr".$request->getContent());
+        Log::info("from postMsg@UserCntlr--".$request->getContent());
         $temp = new Message;
         $temp->from_id = Auth::user()->id;
         $temp->to_id = $request->input('to_id');

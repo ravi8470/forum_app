@@ -18,7 +18,7 @@
     <div class="split right">
         <div class="convoContainer" id="convoContainer"></div>
         <div class="sendMsgBox">
-            <textarea name="typeMsgBox" id="typeMsgBox" class="typeMsgBox"></textarea>
+            <textarea name="typeMsgBox" id="typeMsgBox" class="typeMsgBox" required minlength="2"></textarea>
             <button id= "sendMsgButton" class="sendMsgButton btn btn-primary" value="Send" onclick="sendMsgFromInbox()">Send</button>
         </div>
     </div>
@@ -58,6 +58,15 @@
     </div>
 @endif --}}
 <script>
+
+        var pusher = new Pusher("f6f6bb651131cd2d8ee0", {
+            cluster: "ap2"
+        });
+        var channel = pusher.subscribe("MessageToFrom");
+        channel.bind("newMessage", function(data) {
+            alert("An event was triggered with message: " + data.message);
+        });
+
     window.onload = disableSendBtn();
     function disableSendBtn(){
         document.getElementById('sendMsgButton').disabled = true;

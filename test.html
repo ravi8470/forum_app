@@ -23,11 +23,21 @@
                 background-color: red;
             }
         </style>
+        <script src="https://js.pusher.com/4.4/pusher.min.js"></script>
     </head>
     <body>
         <div class="flex-container">
             <div class="flex-container left"></div>
             <div class="flex-container right"></div>
         </div>
+        <script>
+            var pusher = new Pusher("f6f6bb651131cd2d8ee0", {
+                cluster: "ap2"
+            });
+            var channel = pusher.subscribe("my-channel");
+            channel.bind("my-event", function(data) {
+                alert("An event was triggered with message: " + data.message);
+            });
+        </script>
     </body>
 </html>

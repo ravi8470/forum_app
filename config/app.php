@@ -67,7 +67,8 @@ return [
     |
     */
 
-    'timezone' => 'asia/kolkata',
+    // 'timezone' => 'asia/kolkata',
+    'timezone' => 'UTC',
 
     /*
     |--------------------------------------------------------------------------
