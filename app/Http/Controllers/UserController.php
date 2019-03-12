@@ -7,6 +7,7 @@ use App\Reply;
 use App\Thread;
 use App\Message;
 use Carbon\Carbon;
+use App\Events\newMessage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -77,13 +78,15 @@ class UserController extends Controller
     }
 
     public function postMsg(Request $request){
-        Log::info($request->getContent());
+        Log::info("from postMsg@UserCntlr".$request->getContent());
         $temp = new Message;
         $temp->from_id = Auth::user()->id;
         $temp->to_id = $request->input('to_id');
         $temp->msg = $request->input('msg');
         $temp->created_at = Carbon::now()->toDateTimeString();
         $result = $temp->save();
+        broadcast(new newMessage($temp));
+        Log::debug('after event firing code');
         return response()->json($result);
     }
 }
