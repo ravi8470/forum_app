@@ -10,8 +10,8 @@
         <img class="card-img-top" src="{{asset('img/img_avatar1.png') }}" >
         {{-- substr value to be changed before pushing to heroku  --}}
         <div class="card-body">
-            <h4 class="card-title">{{$name[0]->name ?? NULL}}</h4>
-            <h4 class="card-title">{{$email[0]->email ?? NULL}}</h4>
+            <h4 class="card-title">{{$name ?? NULL}}</h4>
+            <h4 class="card-title">{{$email ?? NULL}}</h4>
             <p class="card-text">Total Threads: {{$totalThreads ?? NULL}}</p>
             <p class="card-text">Total Replies: {{$totalReplies ?? NULL}}</p>
             @auth
