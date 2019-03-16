@@ -57,6 +57,7 @@
         </table>
     </div>
 @endif --}}
+
 <script>
     window.onload = disableSendBtn();
     function disableSendBtn(){
@@ -90,7 +91,7 @@
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
-                console.log(this.response);
+                // console.log(this.response);
                 var x = JSON.parse(this.response);
                 // console.log(x);
                 for(var i = 0; i < x[0].length; i++){

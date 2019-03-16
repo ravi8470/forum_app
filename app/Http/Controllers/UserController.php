@@ -7,6 +7,7 @@ use App\Reply;
 use App\Thread;
 use App\Message;
 use Carbon\Carbon;
+use App\Events\NewMsgSent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -84,6 +85,7 @@ class UserController extends Controller
         $temp->msg = $request->input('msg');
         $temp->created_at = Carbon::now()->toDateTimeString();
         $result = $temp->save();
+        broadcast(new NewMsgSent($temp));
         return response()->json($result);
     }
 }

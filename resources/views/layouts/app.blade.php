@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="google-signin-client_id" content="664887441740-epd8mikfl872l1393l14v7o41e94pq7h.apps.googleusercontent.com">
     <script src="https://apis.google.com/js/platform.js" async defer></script>
-    
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -102,7 +101,6 @@
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
-                console.log(this.response);
                 if(this.response > 0){
                     document.getElementById('InboxBtn').innerHTML = 'Inbox('+this.response+')';
                     document.getElementById('InboxBtn').style.color = 'Green';
