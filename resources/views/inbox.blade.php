@@ -23,6 +23,7 @@
             <button id= "sendMsgButton" class="sendMsgButton btn btn-primary" value="Send" onclick="sendMsgFromInbox()" minlength="2">Send</button>
         </div>
     </div>
+@endsection
 @section('scripts')
 <script>
     window.onload = disableSendBtn();
