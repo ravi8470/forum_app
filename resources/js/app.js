@@ -47,6 +47,3 @@ require("./bootstrap");
 //         });
 //     }
 // });
-Echo.channel("abc").listen("NewMsgSent", event => {
-    console.log("evnt rcvd: " + event);
-});

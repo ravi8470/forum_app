@@ -46772,11 +46772,6 @@ __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js"); // window
 //     }
 // });
 
-
-Echo.channel("abc").listen("NewMsgSent", function (event) {
-  console.log("evnt rcvd: " + event);
-});
-
 /***/ }),
 
 /***/ "./resources/js/bootstrap.js":

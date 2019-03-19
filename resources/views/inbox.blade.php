@@ -1,11 +1,12 @@
 @extends('layouts.app')
 @section('assets')
     <link rel="stylesheet" href="{{asset('/css/inbox.css')}}">
+    {{-- <script src="{{asset('/js/inbox.js') }}"></script> --}}
 @endsection
 @section('content')
-    <div class="split left">
-        @if(isset($uniqueSenders) && isset($newMsgCountPerUser))
+    <div class="split left" id="leftCol">
             <hr>
+        @if(isset($uniqueSenders) && isset($newMsgCountPerUser))
             @foreach ($uniqueSenders as $key => $x)
                 <p onclick="getConvo({{$x}},'{{$key}}')" class="leftPane" id="sender{{$x}}">{{$key}}
                     @if($newMsgCountPerUser[$x] > 0)
@@ -57,7 +58,8 @@
         </table>
     </div>
 @endif --}}
-
+@endsection
+@section('scripts')
 <script>
     window.onload = disableSendBtn();
     function disableSendBtn(){
@@ -80,7 +82,7 @@
         xhttp.send("to_id="+to_id+"&msg="+document.getElementById('typeMsgBox').value);   
     }
     function getConvo(from_id, name){
-        //sets the last user for which the conversation was pulled from server.
+        //sets the last user for which the conversation was pulled from server.it also denotes the current user for which the   chats are getting displayed in convocontainer.
         if(window.lastFromId){
             document.getElementById('sender'+window.lastFromId).className = "leftPane";
         }
@@ -115,5 +117,31 @@
         xhttp.open('GET', '/getConvo/'+from_id , true);
         xhttp.send();
     }
+
+    Echo.channel("abc").listen("NewMsgSent", event => {
+        if(event.msg.to_id == {{Auth::user()->id}}){
+            if(window.lastFromId == event.msg.from_id){
+                document.getElementById('convoContainer').innerHTML += "<p class='alignTextLeft rightPane '><span class='leftSpan'>"+event.msg.msg+"</span></p>";
+            }
+            else{
+                if(document.getElementById('sender'+event.msg.from_id)){
+                    document.getElementById('sender'+event.msg.from_id).innerHTML += "*" ;
+                }
+                else{
+                    var p = document.createElement('p');
+                    p.className = "leftPane";
+                    p.id = "sender"+event.msg.from_id;                    
+                    p.appendChild(document.createTextNode(event.SenderName + "*"));
+                    p.addEventListener("click", function(){
+                        getConvo(event.msg.from_id,event.SenderName);
+                    });
+                    document.getElementById('leftCol').appendChild(p);
+                    document.getElementById('leftCol').appendChild(document.createElement('hr'));
+                }
+            }
+        }
+        console.log("evnt rcvd:  "+ '{{Auth::user()->name}} ' + event.SenderName);
+        
+    });
 </script>
 @endsection

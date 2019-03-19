@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\User;
 use App\Message;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
@@ -37,8 +38,8 @@ class NewMsgSent implements ShouldBroadcastNow
     //     return 'newMessage';
     // }
 
-    // public function broadcastWith()
-    // {
-    //     return ['id' => $this->msg->id];
-    // }
+    public function broadcastWith()
+    {
+        return ['SenderName' => User::find($this->msg->from_id)->name, 'msg'=> $this->msg];
+    }
 }
