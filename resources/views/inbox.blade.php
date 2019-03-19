@@ -22,41 +22,6 @@
             <button id= "sendMsgButton" class="sendMsgButton btn btn-primary" value="Send" onclick="sendMsgFromInbox()" minlength="2">Send</button>
         </div>
     </div>
-    
- <!-- @if(isset($newMsgCount) && isset($newMsg))
-    <h3>New Messages:</h3>
-    <div class="table-responsive">
-        <table class="table">
-            <th>From</th>
-            <th>Message:</th>
-            <th>Sent</th>
-        @foreach($newMsg as $msg)
-            <tr>
-            <td>{{$msg->name}}</td>
-            <td>{{$msg->msg}}</td>
-            <td>{{$msg->created_at}}</td>
-            </tr>
-        @endforeach
-        </table>
-    </div>
-@endif 
- @if(isset($allMsg))
-    <h3>All Messages:</h3>
-    <div class="table-responsive">
-        <table class="table">
-            <th>From</th>
-            <th>Message:</th>
-            <th>Sent</th>
-        @foreach($allMsg as $msg)
-            <tr>
-            <td>{{$msg->name}}</td>
-            <td>{{$msg->msg}}</td>
-            <td>{{$msg->created_at}}</td>
-            </tr>
-        @endforeach
-        </table>
-    </div>
-@endif  -->
 <script>
     window.onload = disableSendBtn();
     function disableSendBtn(){
