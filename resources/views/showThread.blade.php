@@ -15,13 +15,11 @@
         </div>
     @endif
     @if(isset($data)&& isset($userName))
-        @foreach($data as $x)
             <div class="card col-md-6" >
-                <div class="card-header">{{$x->title}}</div>
-                <div class="card-body">{{$x->body}}</div>                
+                <div class="card-header">{{$data->title}}</div>
+                <div class="card-body">{{$data->body}}</div>                
             </div>
            <span class="align-content-end"> Posted by {{$userName}}</span>
-        @endforeach
     @endif
     <hr><br>
     {{-- @if(isset($topComments))
