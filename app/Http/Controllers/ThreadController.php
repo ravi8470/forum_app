@@ -123,7 +123,7 @@ class ThreadController extends Controller
         Log::debug('route hit getTreeAs Json with:',[$threadId,$offset]);
         // $allC = Reply::join('users','replies.user_id', '=', 'users.id')->select('users.name','replies.*',)->where('thread_id','=',$threadId)->get()->toArray();
         $allC = DB::select(DB::raw("WITH RECURSIVE childReplies AS( (SELECT replies.*, users.name FROM replies INNER JOIN users ON 
-        replies.user_id = users.id WHERE thread_id = :threadID AND replies.parent = 0 ORDER BY replies.id LIMIT 6 OFFSET :offset)
+        replies.user_id = users.id WHERE thread_id = :threadID AND replies.parent = 0 ORDER BY replies.created_at DESC LIMIT 6 OFFSET :offset)
         UNION
         SELECT e.*, users.name FROM replies e INNER JOIN childReplies s ON s.id = e.parent INNER JOIN users ON 
         e.user_id = users.id) SELECT * FROM childReplies"),['threadID' => $threadId, 'offset' => $offset*6]);
