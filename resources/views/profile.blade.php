@@ -17,6 +17,7 @@
             @auth
                 @if(Auth::user()->id != $match[1])
                     <span id="msgContainer" ><a class="btn btn-primary" style="vertical-align: middle" onclick="displaySendMsgBox()">Send Message</a></span>
+                    <div id="errmsg"></div>
                 @endif
             @else
                 Please <a href="{{route('login')}}">Login</a> to send a msg.
@@ -26,14 +27,19 @@
     <div ></div>
 </div>
 <script>
+   
     function displaySendMsgBox(){
-        document.getElementById('msgContainer').innerHTML = '<input type="textarea" id="msgBox" style="width:75%;margin-left:7%" maxlength="100" required minlength="2" name="msg">\
-        <button onclick="postMsg('+{{$match[1]}} +')"> Send</button>\
+        document.getElementById('msgContainer').innerHTML = '<input type="textarea" id="msgBox" style="width:75%;margin-left:7%" maxlength="100" name="msg">\
+        <button onclick="postMsg({{$match[1]}})"> Send</button>\
         </form>';
     }
 
 
     function postMsg(to_id){
+        if(document.getElementById('msgBox').value.length < 2){
+            document.getElementById('errmsg').innerHTML = "must be 2 or more chars in length";
+            return;
+        }
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
@@ -50,6 +56,7 @@
                     }
                     document.getElementById('msgContainer').innerHTML =   '<div id="msgContainer"><a class="btn btn-primary" style="margin-left: 38%" onclick="displaySendMsgBox()">Send Message</a></div>'; 
             }
+            document.getElementById('errmsg').innerHTML = "";
         }
         xhttp.open("POST","/postMsg", true);
         xhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");

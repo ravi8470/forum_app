@@ -20,45 +20,9 @@
         <div class="convoContainer" id="convoContainer"></div>
         <div class="sendMsgBox">
             <textarea name="typeMsgBox" id="typeMsgBox" class="typeMsgBox"></textarea>
-            <button id= "sendMsgButton" class="sendMsgButton btn btn-primary" value="Send" onclick="sendMsgFromInbox()">Send</button>
+            <button id= "sendMsgButton" class="sendMsgButton btn btn-primary" value="Send" onclick="sendMsgFromInbox()" minlength="2">Send</button>
         </div>
     </div>
-    
-{{-- @if(isset($newMsgCount) && isset($newMsg))
-    <h3>New Messages:</h3>
-    <div class="table-responsive">
-        <table class="table">
-            <th>From</th>
-            <th>Message:</th>
-            <th>Sent</th>
-        @foreach($newMsg as $msg)
-            <tr>
-            <td>{{$msg->name}}</td>
-            <td>{{$msg->msg}}</td>
-            <td>{{$msg->created_at}}</td>
-            </tr>
-        @endforeach
-        </table>
-    </div>
-@endif --}}
-{{-- @if(isset($allMsg))
-    <h3>All Messages:</h3>
-    <div class="table-responsive">
-        <table class="table">
-            <th>From</th>
-            <th>Message:</th>
-            <th>Sent</th>
-        @foreach($allMsg as $msg)
-            <tr>
-            <td>{{$msg->name}}</td>
-            <td>{{$msg->msg}}</td>
-            <td>{{$msg->created_at}}</td>
-            </tr>
-        @endforeach
-        </table>
-    </div>
-@endif --}}
-@endsection
 @section('scripts')
 <script>
     window.onload = disableSendBtn();
@@ -66,7 +30,13 @@
         document.getElementById('sendMsgButton').disabled = true;
     }
     function sendMsgFromInbox(){
+        document.getElementById('sendMsgButton').disabled = true;
         var msg = document.getElementById('typeMsgBox').value;
+        if(msg.length < 2){
+            document.getElementById('sendMsgButton').disabled = false;
+            return;
+        }
+        document.getElementById('typeMsgBox').value = "";
         var to_id = window.lastFromId;
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
@@ -76,10 +46,11 @@
                     document.getElementById('typeMsgBox').value = "";
                 }
             }
+            document.getElementById('sendMsgButton').disabled = false;
         }
         xhttp.open("POST","/postMsg", true);
         xhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-        xhttp.send("to_id="+to_id+"&msg="+document.getElementById('typeMsgBox').value);   
+        xhttp.send("to_id="+to_id+"&msg="+msg);   
     }
     function getConvo(from_id, name){
         //sets the last user for which the conversation was pulled from server.it also denotes the current user for which the   chats are getting displayed in convocontainer.
@@ -93,7 +64,6 @@
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
-                // console.log(this.response);
                 var x = JSON.parse(this.response);
                 // console.log(x);
                 for(var i = 0; i < x[0].length; i++){

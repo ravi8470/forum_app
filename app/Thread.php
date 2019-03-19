@@ -29,12 +29,21 @@ class Thread extends Model
         }
         foreach($pp as $sec){
             foreach($sec as $x){
-                $x->count = Reply::select('replies.id')->where('replies.thread_id','=',$x->id)->count();
+                // $x->count = Reply::select('replies.id')->where('replies.thread_id','=',$x->id)->count();
+                $x->count = Thread::find($x->id)->replies->count();
                 // dump($x);
             }
         }
         // $pp['Section1'][0]->count = 6;
         // dd($pp['Section1'][0]->count);    
         return $pp;
+    }
+
+    public function user(){
+        return $this->belongsTo('App\User');
+    }
+
+    public function replies(){
+        return $this->hasMany('App\Reply');
     }
 }

@@ -53,30 +53,26 @@ class ThreadController extends Controller
 
         //dd($tree->getNodes()[8]->getDescendants());
         Log::debug('showthread called savedreply as '.session('savedReply').'and threadid as '.$threadId);
-        $data = Thread::select('*')->where('id','=', $threadId)->get();
-        Session::put('currThreadId' , ($data[0]->id ?? NULL));
-        $userName = User::select('name')->where('id','=',$data[0]->user_id)->get()[0]->name;        
+        // $data = Thread::select('*')->where('id','=', $threadId)->get();
+        $data = Thread::find($threadId);
+        // dd($data->id);
+        Session::put('currThreadId' , ($data->id ?? NULL));
+        $userName = $data->user->name;
+        // dd($userName);
         $x = session('savedReply') ?? NULL;
             // $topComments = Reply::join('users','replies.user_id', '=', 'users.id')->select('users.name','replies.reply','replies.id','replies.has_child','replies.parent')->where([['replies.thread_id',
         //  '=',$data[0]->id],['replies.parent',0]])->orderby('replies.updated_at','desc')->limit(8)->get();
         
         session()->forget('savedReply');
-        // $topComments = DB::select(DB::raw("WITH RECURSIVE childReplies AS( (SELECT replies.* FROM replies WHERE thread_id = :threadID AND replies.parent = 0 ORDER BY replies.id LIMIT 3 )
-        // UNION
-        // SELECT e.* FROM replies e INNER JOIN childReplies s ON s.id = e.parent) SELECT * FROM childReplies"),['threadID' => $data[0]->id]);
-        // $pp = array();
-        // $i = 0;
-        // foreach($topComments as $a){
-        //     $pp[$i] = (array)$a;
-        //     $i++;
-        // }
+       
         // $ccc = new Tree($pp);
         // dd(response()->json($ccc->getNodes()));
-        $allC = Reply::join('users','replies.user_id', '=', 'users.id')->select('users.name','replies.*',)->where('thread_id','=',$threadId)->get()->toArray();
-        $tree = new Tree($allC);
+        // $allC = Reply::join('users','replies.user_id', '=', 'users.id')->select('users.name','replies.*',)->where('thread_id','=',$threadId)->get()->toArray();
+        // $tree = new Tree($allC);
         // dd($tree);
         // Log::debug('showthread() data and username and topcomments',['data'=> $data, 'usr'=>$userName, 'topc'=> $topComments]); 
-        $numPages = Reply::select('*')->where([['thread_id','=',$threadId],['parent',0]])->count();
+        // $numPages = Reply::select('*')->where([['thread_id','=',$threadId],['parent',0]])->count();
+        $numPages = Thread::find($threadId)->replies->where('parent',0)->count();
         $numPages = (int)ceil($numPages/6);
         return view('showThread',['data' => $data, 'userName'=> $userName, 'savedReply' =>$x,'numPages'=>$numPages]);
     }

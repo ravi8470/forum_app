@@ -21,4 +21,11 @@ class Reply extends Model
         }
         return $temp->save();
     }
+
+    public function thread(){
+        return $this->belongsTo('App\Thread');
+    }
+    public function user(){
+        return $this->belongsTo('App\User');
+    }
 }

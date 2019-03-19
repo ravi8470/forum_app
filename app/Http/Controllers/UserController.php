@@ -20,6 +20,8 @@ class UserController extends Controller
         // $newMsg = Message::join('users','messages.from_id','=','users.id')->select('from_id', 'msg', 'messages.created_at','users.name')->where([['to_id','=',$id],['seen',false]])->orderBy('messages.created_at','desc')->get();
         // dd($newMsg); 
         $allMsg = Message::join('users','messages.from_id','=','users.id')->select('from_id', 'msg', 'messages.created_at','users.name','seen')->where('to_id','=',$id)->orderBy('messages.created_at','desc')->get();
+        
+        // $allMsg = User::find($id)->receivedMessages()->get();
         // dd($allMsg);
         $uniqueSenders = array_unique($allMsg->pluck('from_id','name')->toArray());
         // dd($uniqueSenders);
@@ -55,21 +57,27 @@ class UserController extends Controller
     
     public function getConvo($from_id){
         $to_id = Auth::user()->id;
-        $allConvo = Message::select('*')->where([['from_id','=',$from_id],['to_id','=',$to_id]])->orWhere([['from_id','=',$to_id],['to_id','=',$from_id]])->orderby('created_at','asc')->get();
+        $a = User::find($to_id)->receivedMessages()->where('from_id',$from_id)->get();
+        $b = User::find($to_id)->sentMessages()->where('to_id',$from_id)->get();
+        $allConvo = ($a->merge($b))->sortBy('created_at')->values();
+        // $allConvo = Message::select('*')->where([['from_id','=',$from_id],['to_id','=',$to_id]])->orWhere([['from_id','=',$to_id],['to_id','=',$from_id]])->orderby('created_at','asc')->get();
         DB::table('messages')->where([['from_id','=',$from_id],['to_id','=',$to_id],['seen',false]])->update(['seen' => true]);
-        $totalNewMsgCount = Message::select('seen')->where([['to_id','=',$to_id],['seen',false]])->get()->count();
+        $totalNewMsgCount = User::find($to_id)->receivedMessages()->where('seen',false)->count();
         return response()->json([$allConvo,$totalNewMsgCount]);
     }
 
     public function getNewMsgCount(){
         $id = Auth::user()->id;
-        $count = Message::select('from_id')->where([['to_id','=',$id],['seen', false]])->get()->count();
+        // $count = Message::select('from_id')->where([['to_id','=',$id],['seen', false]])->get()->count();
+        $count = User::find($id)->receivedMessages()->where('seen',false)->count();
         return response()->json($count);
     }
     
     public function renderProfile(User $userId){
-        $totalThreads = Thread::select('*')->where('threads.user_id','=',$userId->id)->count();
-        $totalReplies = Reply::select('*')->where('replies.user_id','=',$userId->id)->count();
+        // $totalThreads = Thread::select('*')->where('threads.user_id','=',$userId->id)->count();
+        $totalThreads = $userId->threads->count();
+        $totalReplies = $userId->replies->count();
+        // $totalReplies = Reply::select('*')->where('replies.user_id','=',$userId->id)->count();
         // $email = User::select('email')->where('users.id','=',$userId)->get();
         // $name = User::select('name')->where('users.id','=',$userId)->get();
         $email = $userId->email;
