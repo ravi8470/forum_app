@@ -2,8 +2,27 @@
 @section('assets')
     <link rel="stylesheet" href="{{asset('/css/inbox.css')}}">
 @endsection
+@section('moreNavBarItems')
+    <li class="nav-item">
+        <a data-toggle="modal" data-target="#myModal" class="nav-link">SearchUser</a>
+    </li>
+    <div class="modal fade" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                <div id="inputBoxContainer">
+                    <input type="text" onkeyup="searchUsers(this.value)" onfocus="" style="width:300px" placeholder="enter a user's name">
+                </div>    
+                </div>
+                <div class="modal-body">
+                    <div id="userSearchResults"></div>
+                </div>
+            </div>
+        </div>     
+    </div>
+@endsection
 @section('content')
-    <div class="split left">
+    <div class="split left" id="leftCol">
         @if(isset($uniqueSenders) && isset($newMsgCountPerUser))
             <hr>
             @foreach ($uniqueSenders as $key => $x)
@@ -86,6 +105,45 @@
         }
         xhttp.open('GET', '/getConvo/'+from_id , true);
         xhttp.send();
+    }
+
+    function searchUsers(searchTerm){
+        document.getElementById('userSearchResults').innerHTML = "";
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                var x = JSON.parse(this.response);
+                var content = "";
+                function populateSearch(item,index){
+                    content += "<p onclick=loadConvo('"+item.name+"',"+item.id+")>"+item.name+"</p><hr>"
+                }
+                x.forEach(populateSearch);
+                document.getElementById('userSearchResults').innerHTML = content;
+            }       
+        }
+        xhttp.open('GET','/searchUsers/'+searchTerm, true);
+        xhttp.send();
+    }
+
+    function loadConvo(name,id){
+        $('#myModal').modal('hide');
+        if(document.getElementById('sender'+id)){
+            getConvo(id,name);
+        }
+        else{
+            if(id != {{Auth::user()->id}}){
+                var x = document.createElement('p');
+                x.id = "sender"+id;
+                x.className = "leftPane";
+                x.addEventListener("click", function(){
+                        getConvo(id,name);
+                    });
+                x.appendChild(document.createTextNode(name));
+                document.getElementById('leftCol').appendChild(x);
+                document.getElementById('leftCol').appendChild(document.createElement('hr'));
+                getConvo(id,name);
+            }
+        }
     }
 </script>
 @endsection

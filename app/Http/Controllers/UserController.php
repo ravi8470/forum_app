@@ -94,4 +94,10 @@ class UserController extends Controller
         $result = $temp->save();
         return response()->json($result);
     }
+
+    public function searchUsers($searchTerm){
+        Log::debug('searchterm received was:'.$searchTerm);
+        $result = DB::select(DB::raw("SELECT id,name FROM users WHERE LOWER(name) LIKE '%".$searchTerm."%'"));
+        return response()->json($result);
+    }
 }

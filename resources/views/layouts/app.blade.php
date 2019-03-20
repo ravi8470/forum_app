@@ -9,7 +9,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>Tech Forum</title>
-    
+
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
@@ -57,23 +57,24 @@
 
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                         <a class="dropdown-item" href="/profile/{{Auth::user()->id}}">Profile</a>
-                            <a class="dropdown-item" href="{{ route('logout') }}"
+                        <a class="dropdown-item" href="{{route('createThread')}}">Create Thread</a>
+                        <a class="dropdown-item" href="{{ route('logout') }}"
                                 onclick="event.preventDefault();
                                 document.getElementById('logout-form').submit();">
                                 {{ __('Logout') }}
-                            </a>
+                        </a>
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                 @csrf
                             </form>
                         </div>
                     </li>
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <a href="{{route('createThread')}}" class="nav-link">Create Thread</a>
-                    </li>
+                    </li> -->
                     <li class="nav-item">
-                        <a href="{{ route('inbox') }}" class="nav-link" id="InboxBtn">Inbox<span class="glyphicon glyphicon-envelope"></span></a>
+                        <a href="{{ route('inbox') }}" class="nav-link" id="InboxBtn">Inbox</a>
                     </li>
-
+                    @yield('moreNavBarItems')
                 @endguest
             </ul>
         </div>

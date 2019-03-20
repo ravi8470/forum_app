@@ -46,3 +46,5 @@ Route::post('/postReply', 'ReplyController@postReply');
 // Route::get('/getChildReplies/{parent}','ReplyController@getChildReplies');
 
 Route::get('/getTreeAsJson/{threadId}/{offset}','ThreadController@getTreeAsJson');
+
+Route::get('/searchUsers/{searchTerm}', 'UserController@searchUsers');
