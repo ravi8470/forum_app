@@ -115,7 +115,7 @@
                 var x = JSON.parse(this.response);
                 var content = "";
                 function populateSearch(item,index){
-                    content += "<p onclick=loadConvo('"+item.name+"',"+item.id+")>"+item.name+"</p><hr>"
+                    content += "<p onclick=\"loadConvo('"+item.name+"',"+item.id+")\">"+item.name+"</p><hr>"
                 }
                 x.forEach(populateSearch);
                 document.getElementById('userSearchResults').innerHTML = content;
