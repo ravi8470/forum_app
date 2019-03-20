@@ -4,15 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="google-signin-client_id" content="664887441740-epd8mikfl872l1393l14v7o41e94pq7h.apps.googleusercontent.com">
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
     
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>Tech Forum</title>
-
-    <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
+    
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
@@ -76,6 +73,7 @@
                     <li class="nav-item">
                         <a href="{{ route('inbox') }}" class="nav-link" id="InboxBtn">Inbox<span class="glyphicon glyphicon-envelope"></span></a>
                     </li>
+
                 @endguest
             </ul>
         </div>
@@ -113,5 +111,8 @@
         xhttp.send();
     }
 </script>
+<script src="https://apis.google.com/js/platform.js" async ></script>
+<script src="{{ asset('js/app.js') }}" ></script>
+@yield('scripts');
 </body>
 </html>
