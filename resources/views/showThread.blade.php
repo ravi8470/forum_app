@@ -107,12 +107,14 @@
             console.log(flatArray);
             for(var i = 0; i < flatArray.length; i++){
                 var div = document.createElement('div');
-                var userNameText = document.createTextNode(flatArray[i].name.toUpperCase());
+                var userNameLink = document.createElement('a');
+                userNameLink.appendChild(document.createTextNode(flatArray[i].name.toUpperCase()));
+                userNameLink.href = "/profile/"+ flatArray[i].user_id;
                 var tnode = document.createTextNode(flatArray[i].reply);
                 var replybtn = document.createElement('a');
                 replybtn.appendChild(document.createTextNode('Reply'));
                 // replybtn.className = 'btn-primary col-sm-1 ';
-                div.appendChild(userNameText);
+                div.appendChild(userNameLink);
                 div.appendChild(document.createElement('br'));
                 div.appendChild(tnode);
                 var spanForReplyAndExpand = document.createElement('span');
