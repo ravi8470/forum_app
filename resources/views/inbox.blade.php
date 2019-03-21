@@ -11,7 +11,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                 <div id="inputBoxContainer">
-                    <input type="text" onkeyup="searchUsers(this.value)" onfocus="" style="width:300px" placeholder="enter a user's name">
+                    <input type="text" onkeyup="searchUsers(this.value)" style="width:100%" placeholder="enter a user's name">
                 </div>    
                 </div>
                 <div class="modal-body">
@@ -22,7 +22,8 @@
     </div>
 @endsection
 @section('content')
-    <div class="split left" id="leftCol">
+<div class="wrapper">
+    <div class="box1" id="leftCol">
         @if(isset($uniqueSenders) && isset($newMsgCountPerUser))
             <hr>
             @foreach ($uniqueSenders as $key => $x)
@@ -34,13 +35,18 @@
             @endforeach
         @endif
     </div>
-    <div class="split right">
-        <div class="convoContainer" id="convoContainer"></div>
-        <div class="sendMsgBox">
-            <textarea name="typeMsgBox" id="typeMsgBox" class="typeMsgBox"></textarea>
-            <button id= "sendMsgButton" class="sendMsgButton btn btn-primary" value="Send" onclick="sendMsgFromInbox()" minlength="2">Send</button>
+    <div class="box2">
+        <div class="nested">
+            <div class="convoBox" id="convoContainer"></div>
+            <div class="sendBox">
+                <textarea name="typeMsgBox" id="typeMsgBox" class="inboxTextArea" style="height:30px;"></textarea>
+            </div>
+            <div class="sendBtnBox">
+                <button id= "sendMsgButton" value="Send" onclick="sendMsgFromInbox()" minlength="2">Send</button>
+            </div>
         </div>
     </div>
+</div>
 @endsection
 @section('scripts')
 <script>
