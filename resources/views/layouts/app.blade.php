@@ -82,7 +82,7 @@
 </nav>
 {{-- <div id="googleSigninStuff"></div>
 <img  id='profilepic' src="" width="100px" height="100px"/> --}}
-        <main class="py-4">
+        <main class="">
             @yield('content')
         </main>
     </div>
@@ -114,6 +114,6 @@
 </script>
 <script src="https://apis.google.com/js/platform.js" async ></script>
 <script src="{{ asset('js/app.js') }}" ></script>
-@yield('scripts');
+@yield('scripts')
 </body>
 </html>
