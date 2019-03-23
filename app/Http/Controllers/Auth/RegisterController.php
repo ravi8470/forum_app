@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use App\Mail\UserRegistered;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 
@@ -63,10 +66,19 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $x =  User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
+
+        if($x){
+            //Need to add cc info on mailgun to send email to any mail-id. won't work now.
+        // Mail::to(Auth::user()->email)->send(new UserRegistered());
+            Log::debug('Before sending registered email');
+            Mail::to('rvkmr0851@gmail.com')->send(new UserRegistered($x));
+            Log::debug('After sending registered email');
+        }
+        return $x;
     }
 }
