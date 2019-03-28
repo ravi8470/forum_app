@@ -76,7 +76,7 @@ class RegisterController extends Controller
             //Need to add cc info on mailgun to send email to any mail-id. won't work now.
         // Mail::to(Auth::user()->email)->send(new UserRegistered());
             Log::debug('Before sending registered email');
-            Mail::to('rvkmr0851@gmail.com')->send(new UserRegistered($x));
+            Mail::to($x)->send(new UserRegistered($x));
             Log::debug('After sending registered email');
         }
         return $x;

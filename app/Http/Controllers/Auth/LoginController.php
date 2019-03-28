@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Auth;
 
 use App\User;
 use Carbon\Carbon;
+use App\Mail\UserRegistered;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
@@ -65,6 +67,7 @@ class LoginController extends Controller
             if($newUser->save()){
                 auth()->login($newUser, true);
             }
+            Mail::to($newUser)->send(new UserRegistered($newUser));
         }
         return redirect()->to('home');
     }
