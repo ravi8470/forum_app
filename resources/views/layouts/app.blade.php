@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="google-signin-client_id" content="664887441740-epd8mikfl872l1393l14v7o41e94pq7h.apps.googleusercontent.com">
+    {{-- <meta name="google-signin-client_id" content="664887441740-epd8mikfl872l1393l14v7o41e94pq7h.apps.googleusercontent.com"> --}}
     
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -112,7 +112,7 @@
         xhttp.send();
     }
 </script>
-<script src="https://apis.google.com/js/platform.js" async ></script>
+{{-- <script src="https://apis.google.com/js/platform.js" async ></script> --}}
 <script src="{{ asset('js/app.js') }}" ></script>
 @yield('scripts')
 </body>
