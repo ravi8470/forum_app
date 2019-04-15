@@ -131,7 +131,7 @@
     }
 
     function loadConvo(name,id){
-        // $('#myModal').modal('hide');
+        $('#myModal').modal('hide');
         if(document.getElementById('sender'+id)){
             getConvo(id,name);
         }
