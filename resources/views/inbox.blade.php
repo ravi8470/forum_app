@@ -12,10 +12,9 @@
                 <div class="modal-header">
                 <div id="inputBoxContainer">
                     <input type="text" onkeyup="searchUsers(this.value)" style="width:100%" placeholder="enter a user's name">
-                </div>    
-                </div>
-                <div class="modal-body">
                     <div id="userSearchResults"></div>
+                </div>    
+                
                 </div>
             </div>
         </div>     
@@ -132,7 +131,7 @@
     }
 
     function loadConvo(name,id){
-        $('#myModal').modal('hide');
+        // $('#myModal').modal('hide');
         if(document.getElementById('sender'+id)){
             getConvo(id,name);
         }
