@@ -44,9 +44,9 @@
     @endif
     
         @if(isset($numPages) && $numPages > 1)
-            .. Jump to Page: <select>
+            .. Jump to Page: <select onchange="loadCommentsViaJs(this.value)">
             @for ($i = 0; $i < $numPages && $i < 6; $i++)
-                <option onclick="loadCommentsViaJs({{$i}})">{{$i+1}}</option>
+                <option value={{$i}}>{{$i+1}}</option>
             @endfor
             </select><br>
         @endif
