@@ -115,7 +115,6 @@
                 replybtn.appendChild(document.createTextNode('Reply'));
                 // replybtn.className = 'btn-primary col-sm-1 ';
                 div.appendChild(userNameLink);
-                div.appendChild(document.createElement('br'));
                 div.appendChild(tnode);
                 var spanForReplyAndExpand = document.createElement('span');
                 div.appendChild(spanForReplyAndExpand);
